@@ -4,7 +4,6 @@ public class MatrixImplementation implements Matrix {
 
   private double[][] matrix;
 
-  // Note that initialises to null values !
   public MatrixImplementation(int rows, int columns) {
     matrix = new double[rows][columns];
   }
