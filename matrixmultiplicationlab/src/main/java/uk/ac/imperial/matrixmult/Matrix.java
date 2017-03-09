@@ -10,6 +10,8 @@ public interface Matrix {
 
   public int getNumColumns();
 
+  public Vector getRow(int row);
+
   public void add(Matrix a, Matrix b);
 
   public void subtract(Matrix a, Matrix b);

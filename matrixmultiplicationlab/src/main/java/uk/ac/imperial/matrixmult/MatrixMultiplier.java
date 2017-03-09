@@ -1,5 +1,9 @@
 package uk.ac.imperial.matrixmult;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class MatrixMultiplier {
 
 //  // ****  NO MULTITHREADING NAIVE IMPLEMENTATION **** //
@@ -31,6 +35,42 @@ public class MatrixMultiplier {
 //    pool.awaitTermination(2, TimeUnit.MINUTES);
 //    return c;
 //  }
+
+
+
+//  // ****  NO MULTITHREADING FAST NAIVE IMPLEMENTATION **** //
+//
+//  public static Matrix multiply(Matrix a, Matrix b) throws Exception {
+//    Matrix c = new SimpleArrayMatrix(a.getNumRows(), b.getNumColumns());
+//    for (int i = 0; i < a.getNumRows(); i ++) {
+//      Vector ai = a.getRow(i);
+//      Vector ci = c.getRow(i);
+//      for (int k = 0; k < a.getNumColumns(); k ++) {
+//        Vector bk = b.getRow(k);
+//        double aik = ai.getColumn(k);
+//        for (int j = 0; j < b.getNumColumns(); j ++) {
+//          ci.setColumn(j, ci.getColumn(j) + aik * bk.getColumn(j));
+//        }
+//      }
+//    }
+//    return c;
+//  }
+
+
+
+  // ****  MULTITHREADING FAST NAIVE IMPLEMENTATION **** //
+
+  public static Matrix multiply(final Matrix a, final Matrix b) throws Exception {
+    Matrix c = new SimpleArrayMatrix(a.getNumRows(), b.getNumColumns());
+    ExecutorService pool = Executors.newFixedThreadPool(7);
+    for (int row = 0; row < a.getNumRows(); row ++) {
+      FastNaiveMultiply thread = new FastNaiveMultiply(a, b, c, row);
+      pool.submit(thread);
+    }
+    pool.shutdown();
+    pool.awaitTermination(2, TimeUnit.MINUTES);
+    return c;
+  }
 
 
 
@@ -144,24 +184,24 @@ public class MatrixMultiplier {
 
 
 
-  // ****  MULTITHREADING STRASSEN'S IMPLEMENTATION **** //
-
-  public final static int LEAF_SIZE = 100;
-
-  public static Matrix multiply(Matrix a, Matrix b) {
-    return strassen(a, b);
-  }
-
-  private static Matrix strassen(Matrix a, Matrix b) {
-    Matrix c = new ArrayMatrix(a.getNumRows(), b.getNumColumns());
-    Thread t = new Thread(new StrassenMultiply(a, b, c));
-    t.start();
-    try {
-      t.join();
-    } catch (Exception e) {
-      System.out.println("Exception: failed to wait for main thread to finish.");
-    }
-    return c.resizeTo(0, a.getNumRows(), 0, b.getNumColumns());
-  }
+//  // ****  MULTITHREADING STRASSEN'S IMPLEMENTATION **** //
+//
+//  public final static int LEAF_SIZE = 100;
+//
+//  public static Matrix multiply(Matrix a, Matrix b) {
+//    return strassen(a, b);
+//  }
+//
+//  private static Matrix strassen(Matrix a, Matrix b) {
+//    Matrix c = new ArrayMatrix(a.getNumRows(), b.getNumColumns());
+//    Thread t = new Thread(new StrassenMultiply(a, b, c));
+//    t.start();
+//    try {
+//      t.join();
+//    } catch (Exception e) {
+//      System.out.println("Exception: failed to wait for main thread to finish.");
+//    }
+//    return c.resizeTo(0, a.getNumRows(), 0, b.getNumColumns());
+//  }
 
 }
