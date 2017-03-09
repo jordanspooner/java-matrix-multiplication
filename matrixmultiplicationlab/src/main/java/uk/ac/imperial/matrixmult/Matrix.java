@@ -10,8 +10,6 @@ public interface Matrix {
 
   public int getNumColumns();
 
-  public Vector getRow(int row);
-
   public default boolean equals(Matrix m, double delta) {
     if ((m.getNumRows() != this.getNumRows())
         || (m.getNumColumns() != this.getNumColumns())) {

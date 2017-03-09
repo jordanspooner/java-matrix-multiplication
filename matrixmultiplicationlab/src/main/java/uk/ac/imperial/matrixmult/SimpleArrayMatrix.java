@@ -2,7 +2,7 @@ package uk.ac.imperial.matrixmult;
 
 public class SimpleArrayMatrix implements Matrix {
 
-  private double[][] matrix;
+  public double[][] matrix;
 
   public SimpleArrayMatrix(int rows, int columns) {
     matrix = new double[rows][columns];
@@ -30,11 +30,6 @@ public class SimpleArrayMatrix implements Matrix {
   @Override
   public int getNumColumns() {
     return matrix[0].length;
-  }
-
-  @Override
-  public Vector getRow(int row) {
-    return new SimpleArrayVector(matrix[row]);
   }
 
 }
