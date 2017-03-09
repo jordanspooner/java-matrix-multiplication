@@ -12,12 +12,6 @@ public interface Matrix {
 
   public Vector getRow(int row);
 
-  public void add(Matrix a, Matrix b);
-
-  public void subtract(Matrix a, Matrix b);
-
-  public Matrix resizeTo(int rowStartIndex, int rowEndIndex, int colStartIndex, int colEndIndex);
-
   public default boolean equals(Matrix m, double delta) {
     if ((m.getNumRows() != this.getNumRows())
         || (m.getNumColumns() != this.getNumColumns())) {
